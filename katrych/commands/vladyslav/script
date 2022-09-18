@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#/ command: katrych:vladyslav: "Display all defined variables"
+#/ usage: rerun katrych:vladyslav [options]
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: 
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "vladyslav" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+
+echo "All defined shell variables:"
+for variable in $(printenv)
+do
+  key=$(echo $variable | cut -d "=" -f 1)
+  value=$(echo $variable | cut -d "=" -f 2)
+
+  echo -e "${RED}${key} ${GREEN}${value}"
+done
+
+# - - -
+
+# Done. Exit with last command exit status.
+exit $?
+
